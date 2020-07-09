@@ -24,7 +24,7 @@ public class MainActivity extends AppCompatActivity implements MainAdapter.CardC
 
     private MainAdapter mainAdapter;
     private RecyclerView mainRecyclerView;
-    private boolean mTwoPane;
+    private boolean mLandscape;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -32,13 +32,13 @@ public class MainActivity extends AppCompatActivity implements MainAdapter.CardC
         setContentView(R.layout.activity_main);
 
         if (findViewById(R.id.grid_recycler_view) != null) {
-            mTwoPane = true;
+            mLandscape = true;
 
             mainRecyclerView = findViewById(R.id.grid_recycler_view);
             GridLayoutManager gridLayoutManager = new GridLayoutManager(this, 2);
             mainRecyclerView.setLayoutManager(gridLayoutManager);
         } else {
-            mTwoPane = false;
+            mLandscape = false;
 
             mainRecyclerView = findViewById(R.id.main_recycler_view);
             LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
@@ -62,7 +62,7 @@ public class MainActivity extends AppCompatActivity implements MainAdapter.CardC
         Gson gson = new Gson();
         String recipeJSON = gson.toJson(currentRecipe);
         Intent intent;
-        if(mTwoPane) {
+        if(mLandscape) {
             intent = new Intent(MainActivity.this, DetailsAndProcedureActivity.class);
         } else {
             intent = new Intent(MainActivity.this, DetailActivity.class);

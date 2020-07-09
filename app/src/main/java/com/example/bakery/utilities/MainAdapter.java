@@ -31,8 +31,8 @@ public class MainAdapter extends RecyclerView.Adapter<MainAdapter.MainViewHolder
         return recipeList;
     }
 
-    public Recipe getRecipeByPosition(int postion) {
-        return recipeList.get(postion);
+    public Recipe getRecipeByPosition(int position) {
+        return recipeList.get(position);
     }
 
     @NonNull

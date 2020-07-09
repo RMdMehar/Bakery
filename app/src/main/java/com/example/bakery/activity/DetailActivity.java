@@ -1,6 +1,7 @@
 package com.example.bakery.activity;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.FragmentManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -8,19 +9,21 @@ import android.content.Intent;
 import android.os.Bundle;
 
 import com.example.bakery.R;
+import com.example.bakery.fragment.DetailFragment;
 import com.example.bakery.model.Ingredient;
 import com.example.bakery.model.Instruction;
 import com.example.bakery.model.Recipe;
 import com.example.bakery.utilities.InstructionsAdapter;
 import com.google.gson.Gson;
 
+import java.util.ArrayList;
 import java.util.List;
 
-public class DetailActivity extends AppCompatActivity implements InstructionsAdapter.InstructionClickListener {
+public class DetailActivity extends AppCompatActivity {
     Gson gson;
     Recipe currentRecipe;
-    List<Instruction> instructionList;
-    List<Ingredient> ingredientList;
+    List<Instruction> instructionList = new ArrayList<>();
+    List<Ingredient> ingredientList = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -32,24 +35,21 @@ public class DetailActivity extends AppCompatActivity implements InstructionsAda
         String recipeJSON = receivingIntent.getStringExtra("recipeJSON");
         currentRecipe = gson.fromJson(recipeJSON, Recipe.class);
         instructionList = currentRecipe.getInstructions();
+        ingredientList = currentRecipe.getIngredients();
 
-        /*RecyclerView instructionsRecyclerView = findViewById(R.id.instructions_recycler_view);
-        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
-        instructionsRecyclerView.setLayoutManager(linearLayoutManager);
-        instructionsRecyclerView.setHasFixedSize(false);
+        String instructionJSON = gson.toJson(instructionList);
+        String ingredientJSON = gson.toJson(ingredientList);
+        Bundle bundle = new Bundle();
+        bundle.putString("instructionJSON", instructionJSON);
+        bundle.putString("ingredientJSON", ingredientJSON);
 
-        InstructionsAdapter instructionsAdapter = new InstructionsAdapter(instructionList, this);
-        instructionsRecyclerView.setAdapter(instructionsAdapter);*/
-    }
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        DetailFragment detailPortraitFragment = new DetailFragment();
+        detailPortraitFragment.setArguments(bundle);
 
-    @Override
-    public void onInstructionClick(int clickedItemIndex) {
-        Instruction currentInstruction = instructionList.get(clickedItemIndex);
-        String instructionJSON = gson.toJson(currentInstruction);
-
-        Intent sendingIntent = new Intent(DetailActivity.this, ProcedureActivity.class);
-        sendingIntent.putExtra("instructionJSON", instructionJSON);
-        startActivity(sendingIntent);
+        fragmentManager.beginTransaction()
+                .add(R.id.detail_portrait_fragment, detailPortraitFragment)
+                .commit();
     }
 
     private void loadIngredients() {
