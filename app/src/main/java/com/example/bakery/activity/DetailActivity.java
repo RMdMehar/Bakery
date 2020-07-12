@@ -7,6 +7,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 
 import com.example.bakery.R;
 import com.example.bakery.fragment.DetailFragment;
@@ -24,6 +25,9 @@ public class DetailActivity extends AppCompatActivity {
     Recipe currentRecipe;
     List<Instruction> instructionList = new ArrayList<>();
     List<Ingredient> ingredientList = new ArrayList<>();
+    String instructionJSON;
+    String ingredientJSON;
+    private static final String LOG_TAG = DetailActivity.class.getSimpleName();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,15 +41,17 @@ public class DetailActivity extends AppCompatActivity {
         instructionList = currentRecipe.getInstructions();
         ingredientList = currentRecipe.getIngredients();
 
-        String instructionJSON = gson.toJson(instructionList);
-        String ingredientJSON = gson.toJson(ingredientList);
-        Bundle bundle = new Bundle();
+        instructionJSON = gson.toJson(instructionList);
+        //Log.v(LOG_TAG, "Instructions = " + instructionJSON);
+
+        ingredientJSON = gson.toJson(ingredientList);
+        /*Bundle bundle = new Bundle();
         bundle.putString("instructionJSON", instructionJSON);
-        bundle.putString("ingredientJSON", ingredientJSON);
+        bundle.putString("ingredientJSON", ingredientJSON);*/
 
         FragmentManager fragmentManager = getSupportFragmentManager();
         DetailFragment detailPortraitFragment = new DetailFragment();
-        detailPortraitFragment.setArguments(bundle);
+        //detailPortraitFragment.setArguments(bundle);
 
         fragmentManager.beginTransaction()
                 .add(R.id.detail_portrait_fragment, detailPortraitFragment)
@@ -61,4 +67,11 @@ public class DetailActivity extends AppCompatActivity {
         startActivity(sendingIntent);
     }
 
+    public String getInstructionJSON() {
+        return instructionJSON;
+    }
+
+    public String getIngredientJSON() {
+        return ingredientJSON;
+    }
 }

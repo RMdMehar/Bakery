@@ -2,6 +2,7 @@ package com.example.bakery.fragment;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -26,18 +27,29 @@ public class DetailFragment extends Fragment implements InstructionsAdapter.Inst
     private List<Instruction> mInstructions;
     private List<Ingredient> mIngredients;
     private View rootView;
+    private static final String LOG_TAG = DetailActivity.class.getSimpleName();
 
     public DetailFragment() {}
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        rootView = inflater.inflate(R.layout.fragment_detail, container, false);
-        Bundle bundle = getArguments();
-        Gson gson = new Gson();
+        /*Bundle bundle = getArguments();
         String instructionJSON = bundle.getString("instructionJSON");
         String ingredientJSON = bundle.getString("ingredientJSON");
+        */
+        rootView = inflater.inflate(R.layout.fragment_detail, container, false);
+
+        Gson gson = new Gson();
+        DetailActivity detailActivity = (DetailActivity) getActivity();
+        String instructionJSON = detailActivity.getInstructionJSON();
+        Log.v(LOG_TAG, "Fr:Instructions = " + instructionJSON);
+
+        String ingredientJSON = detailActivity.getIngredientJSON();
         mInstructions = gson.fromJson(instructionJSON, new TypeToken<List<Instruction>>(){}.getType());
         mIngredients = gson.fromJson(ingredientJSON, new TypeToken<List<Ingredient>>(){}.getType());
+
+
+
 
         RecyclerView instructionsRecyclerView = rootView.findViewById(R.id.instructions_recycler_view);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(rootView.getContext());
