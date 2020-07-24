@@ -1,7 +1,5 @@
 package com.example.bakery.model;
 
-import android.widget.ListView;
-
 import java.util.List;
 
 public class Recipe {

@@ -24,7 +24,7 @@ public class MainActivity extends AppCompatActivity implements MainAdapter.CardC
 
     private MainAdapter mainAdapter;
     private RecyclerView mainRecyclerView;
-    private boolean mLandscape;
+    private boolean mTwoPane;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -32,13 +32,13 @@ public class MainActivity extends AppCompatActivity implements MainAdapter.CardC
         setContentView(R.layout.activity_main);
 
         if (findViewById(R.id.grid_recycler_view) != null) {
-            mLandscape = true;
+            mTwoPane = true;
 
             mainRecyclerView = findViewById(R.id.grid_recycler_view);
             GridLayoutManager gridLayoutManager = new GridLayoutManager(this, 2);
             mainRecyclerView.setLayoutManager(gridLayoutManager);
         } else {
-            mLandscape = false;
+            mTwoPane = false;
 
             mainRecyclerView = findViewById(R.id.main_recycler_view);
             LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
@@ -62,18 +62,16 @@ public class MainActivity extends AppCompatActivity implements MainAdapter.CardC
         Gson gson = new Gson();
         String recipeJSON = gson.toJson(currentRecipe);
         Intent intent;
-        if(mLandscape) {
+        if(mTwoPane) {
             intent = new Intent(MainActivity.this, DetailsAndProcedureActivity.class);
         } else {
             intent = new Intent(MainActivity.this, DetailActivity.class);
         }
         intent.putExtra("recipeJSON", recipeJSON);
         startActivity(intent);
-
     }
 
     public class RecipeTask extends AsyncTask<URL, Void, List<Recipe>> {
-
         @Override
         protected List<Recipe> doInBackground(URL... urls) {
             URL searchUrl = urls[0];

@@ -1,8 +1,8 @@
 package com.example.bakery.fragment;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,6 +19,7 @@ import com.google.gson.reflect.TypeToken;
 
 import java.util.List;
 
+import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -29,24 +30,47 @@ public class DetailFragment extends Fragment implements InstructionsAdapter.Inst
     private View rootView;
     private static final String LOG_TAG = DetailActivity.class.getSimpleName();
 
+    OnIngredientItemClickListener mIngredientCallback;
+    OnInstructionItemClickListener mInstructionCallback;
+
     public DetailFragment() {}
+
+    public interface OnIngredientItemClickListener {
+        void onIngredientSelected(String selectedIngredientJSON);
+    }
+
+    public interface OnInstructionItemClickListener {
+        void onInstructionSelected(Instruction selectedInstruction);
+    }
+
+    @Override
+    public void onAttach(@NonNull Context context) {
+        super.onAttach(context);
+
+        try {
+            mIngredientCallback = (OnIngredientItemClickListener) context;
+        } catch (ClassCastException e) {
+            throw new ClassCastException(context.toString() + "must implement OnIngredientItemClickListener");
+        }
+
+        try {
+            mInstructionCallback = (OnInstructionItemClickListener) context;
+        } catch (ClassCastException e) {
+            throw new ClassCastException(context.toString() + " must implement OnInstructionItemClickListener");
+        }
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        /*Bundle bundle = getArguments();
+        Bundle bundle = getArguments();
         String instructionJSON = bundle.getString("instructionJSON");
         String ingredientJSON = bundle.getString("ingredientJSON");
-        */
+
         rootView = inflater.inflate(R.layout.fragment_detail, container, false);
 
         Gson gson = new Gson();
-        DetailActivity detailActivity = (DetailActivity) getActivity();
-        String instructionJSON = detailActivity.getInstructionJSON();
-        Log.v(LOG_TAG, "Fr:Instructions = " + instructionJSON);
 
-        String ingredientJSON = detailActivity.getIngredientJSON();
         mInstructions = gson.fromJson(instructionJSON, new TypeToken<List<Instruction>>(){}.getType());
-        mIngredients = gson.fromJson(ingredientJSON, new TypeToken<List<Ingredient>>(){}.getType());
 
 
 
@@ -60,40 +84,18 @@ public class DetailFragment extends Fragment implements InstructionsAdapter.Inst
         instructionsRecyclerView.setAdapter(instructionsAdapter);
 
         TextView ingredientsItem = rootView.findViewById(R.id.ingredients_item);
-        /*ingredientsItem.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                loadIngredients();
-            }
-        });*/
-
+        ingredientsItem.setOnClickListener(view -> mIngredientCallback.onIngredientSelected(ingredientJSON));
 
         return rootView;
-    }
-
-    public void setInstructions(List<Instruction> instructions) {
-        mInstructions = instructions;
-    }
-
-    public void setIngredients(List<Ingredient> ingredients) {
-        mIngredients = ingredients;
     }
 
     @Override
     public void onInstructionClick(int clickedItemIndex) {
         Instruction currentInstruction = mInstructions.get(clickedItemIndex);
-        Gson gson = new Gson();
-        String instructionJSON = gson.toJson(currentInstruction);
-
-        Intent sendingIntent = new Intent(rootView.getContext(), ProcedureActivity.class);
-        sendingIntent.putExtra("instructionJSON", instructionJSON);
-        startActivity(sendingIntent);
+        mInstructionCallback.onInstructionSelected(currentInstruction);
     }
 
-    private void loadIngredients() {
-        Gson gson = new Gson();
-        String ingredientJSON = gson.toJson(mIngredients);
-
+    private void loadIngredients(String ingredientJSON) {
         Intent sendingIntent = new Intent(getContext(), ProcedureActivity.class);
         sendingIntent.putExtra("ingredientJSON", ingredientJSON);
         startActivity(sendingIntent);

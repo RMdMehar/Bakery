@@ -20,8 +20,8 @@ import com.google.gson.Gson;
 import java.util.ArrayList;
 import java.util.List;
 
-public class DetailActivity extends AppCompatActivity {
-    Gson gson;
+public class DetailActivity extends AppCompatActivity implements DetailFragment.OnInstructionItemClickListener, DetailFragment.OnIngredientItemClickListener {
+    Gson gson = new Gson();
     Recipe currentRecipe;
     List<Instruction> instructionList = new ArrayList<>();
     List<Ingredient> ingredientList = new ArrayList<>();
@@ -34,7 +34,6 @@ public class DetailActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_detail);
 
-        gson = new Gson();
         Intent receivingIntent = getIntent();
         String recipeJSON = receivingIntent.getStringExtra("recipeJSON");
         currentRecipe = gson.fromJson(recipeJSON, Recipe.class);
@@ -42,36 +41,34 @@ public class DetailActivity extends AppCompatActivity {
         ingredientList = currentRecipe.getIngredients();
 
         instructionJSON = gson.toJson(instructionList);
-        //Log.v(LOG_TAG, "Instructions = " + instructionJSON);
 
         ingredientJSON = gson.toJson(ingredientList);
-        /*Bundle bundle = new Bundle();
+        Bundle bundle = new Bundle();
         bundle.putString("instructionJSON", instructionJSON);
-        bundle.putString("ingredientJSON", ingredientJSON);*/
+        bundle.putString("ingredientJSON", ingredientJSON);
 
         FragmentManager fragmentManager = getSupportFragmentManager();
         DetailFragment detailPortraitFragment = new DetailFragment();
-        //detailPortraitFragment.setArguments(bundle);
+        detailPortraitFragment.setArguments(bundle);
 
         fragmentManager.beginTransaction()
                 .add(R.id.detail_portrait_fragment, detailPortraitFragment)
                 .commit();
     }
 
-    private void loadIngredients() {
-        ingredientList = currentRecipe.getIngredients();
-        String ingredientJSON = gson.toJson(instructionList);
+    @Override
+    public void onInstructionSelected(Instruction selectedInstruction) {
+        String instructionJSON = gson.toJson(selectedInstruction);
 
         Intent sendingIntent = new Intent(DetailActivity.this, ProcedureActivity.class);
-        sendingIntent.putExtra("ingredientJSON", ingredientJSON);
+        sendingIntent.putExtra("instructionJSON", instructionJSON);
         startActivity(sendingIntent);
     }
 
-    public String getInstructionJSON() {
-        return instructionJSON;
-    }
-
-    public String getIngredientJSON() {
-        return ingredientJSON;
+    @Override
+    public void onIngredientSelected(String selectedIngredientJSON) {
+        Intent sendingIntent = new Intent(DetailActivity.this, ProcedureActivity.class);
+        sendingIntent.putExtra("ingredientJSON", selectedIngredientJSON);
+        startActivity(sendingIntent);
     }
 }
