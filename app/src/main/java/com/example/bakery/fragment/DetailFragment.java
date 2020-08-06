@@ -2,7 +2,9 @@ package com.example.bakery.fragment;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -66,7 +68,12 @@ public class DetailFragment extends Fragment implements InstructionsAdapter.Inst
         String instructionJSON = bundle.getString("instructionJSON");
         String ingredientJSON = bundle.getString("ingredientJSON");
 
+
+
         rootView = inflater.inflate(R.layout.fragment_detail, container, false);
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(rootView.getContext());
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.putString("lastSeenIngredientsJSON", ingredientJSON).apply();
 
         Gson gson = new Gson();
 

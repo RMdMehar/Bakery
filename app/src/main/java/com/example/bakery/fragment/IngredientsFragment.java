@@ -1,6 +1,8 @@
 package com.example.bakery.fragment;
 
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -30,6 +32,8 @@ public class IngredientsFragment extends Fragment {
         Bundle args = getArguments();
         String ingredientJSON = args.getString("ingredientJSON");
         View rootView = inflater.inflate(R.layout.fragment_ingredients, container, false);
+
+
 
         Gson gson = new Gson();
         List<Ingredient> ingredientList = gson.fromJson(ingredientJSON, new TypeToken<List<Ingredient>>(){}.getType());
