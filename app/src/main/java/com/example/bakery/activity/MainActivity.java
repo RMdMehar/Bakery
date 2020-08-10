@@ -25,6 +25,7 @@ public class MainActivity extends AppCompatActivity implements MainAdapter.CardC
     private MainAdapter mainAdapter;
     private RecyclerView mainRecyclerView;
     private boolean mTwoPane;
+    public static boolean backgroundWorkDone = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -82,6 +83,7 @@ public class MainActivity extends AppCompatActivity implements MainAdapter.CardC
         protected void onPostExecute(List<Recipe> recipeList) {
             mainAdapter.setRecipeList(recipeList);
             mainRecyclerView.setAdapter(mainAdapter);
+            backgroundWorkDone = true;
             super.onPostExecute(recipeList);
         }
     }
