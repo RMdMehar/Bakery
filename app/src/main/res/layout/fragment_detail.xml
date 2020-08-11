@@ -9,13 +9,16 @@
         android:id="@+id/ingredients_item"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:background="@color/colorAccent"
         android:padding="12dp"
         android:text="@string/ingredients"
-        android:textAllCaps="true"/>
+        android:textAllCaps="true"
+        android:textSize="20sp"
+        android:textColor="@color/colorHeadlineText"/>
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/instructions_recycler_view"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"/>
+        android:layout_height="wrap_content"/>
 
 </LinearLayout>

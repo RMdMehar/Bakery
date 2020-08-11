@@ -36,6 +36,4 @@
         android:orientation="vertical"
         android:divider="@null"/>
 
-
-
 </LinearLayout>

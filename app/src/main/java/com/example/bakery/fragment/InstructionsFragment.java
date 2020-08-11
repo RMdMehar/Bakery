@@ -1,25 +1,32 @@
 package com.example.bakery.fragment;
 
 import android.annotation.SuppressLint;
+import android.app.Dialog;
 import android.net.Uri;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.FrameLayout;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.example.bakery.R;
+import com.example.bakery.activity.MainActivity;
 import com.example.bakery.model.Instruction;
 import com.google.android.exoplayer2.ExoPlayerFactory;
 import com.google.android.exoplayer2.SimpleExoPlayer;
 import com.google.android.exoplayer2.source.MediaSource;
 import com.google.android.exoplayer2.source.ProgressiveMediaSource;
+import com.google.android.exoplayer2.ui.PlaybackControlView;
 import com.google.android.exoplayer2.ui.PlayerView;
+import com.google.android.exoplayer2.ui.SimpleExoPlayerView;
 import com.google.android.exoplayer2.upstream.DataSource;
 import com.google.android.exoplayer2.upstream.DefaultDataSourceFactory;
 import com.google.android.exoplayer2.util.Util;
 import com.google.gson.Gson;
 
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 
 public class InstructionsFragment extends Fragment {
@@ -80,10 +87,13 @@ public class InstructionsFragment extends Fragment {
         TextView description = rootView.findViewById(R.id.description);
         description.setText(currentInstruction.getDescription());
 
-        playerView = rootView.findViewById(R.id.video_view);
-        playerView.setVisibility(View.VISIBLE);
         videoURL = currentInstruction.getVideoURL();
-
+        playerView = rootView.findViewById(R.id.exoplayer);
+        if (videoURL != null) {
+            playerView.setVisibility(View.VISIBLE);
+        } else {
+            playerView.setVisibility(View.GONE);
+        }
         return rootView;
     }
 
@@ -93,8 +103,8 @@ public class InstructionsFragment extends Fragment {
         Uri uri = Uri.parse(videoURL);
         MediaSource mediaSource = buildMediaSource(uri);
         simpleExoPlayer.setPlayWhenReady(playWhenReady);
-        simpleExoPlayer.seekTo(currentWindow, playbackPosition);
         simpleExoPlayer.prepare(mediaSource, false, false);
+        simpleExoPlayer.seekTo(currentWindow, playbackPosition);
     }
 
     private MediaSource buildMediaSource(Uri uri) {

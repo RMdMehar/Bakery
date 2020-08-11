@@ -51,9 +51,16 @@ public class DetailActivity extends AppCompatActivity implements DetailFragment.
         DetailFragment detailPortraitFragment = new DetailFragment();
         detailPortraitFragment.setArguments(bundle);
 
-        fragmentManager.beginTransaction()
-                .add(R.id.detail_portrait_fragment, detailPortraitFragment)
-                .commit();
+        if (savedInstanceState == null) {
+            fragmentManager.beginTransaction()
+                    .add(R.id.detail_portrait_fragment, detailPortraitFragment)
+                    .commit();
+        } else {
+            fragmentManager.beginTransaction()
+                    .replace(R.id.detail_portrait_fragment, detailPortraitFragment)
+                    .commit();
+        }
+
     }
 
     @Override

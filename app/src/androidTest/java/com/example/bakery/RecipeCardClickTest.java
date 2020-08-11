@@ -11,6 +11,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import androidx.test.espresso.Espresso;
+import androidx.test.espresso.contrib.RecyclerViewActions;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.filters.LargeTest;
 import androidx.test.platform.app.InstrumentationRegistry;
@@ -41,10 +42,8 @@ public class RecipeCardClickTest {
 
     @Test
     public void clickRecipeCard_OpenDetailsActivity() {
-        onData(anything())
-                .inAdapterView(withId(R.id.main_recycler_view))
-                .atPosition(1)
-                .perform(click());
+        onView(withId(R.id.main_recycler_view))
+                .perform(RecyclerViewActions.actionOnItemAtPosition(1, click()));
 
         onView(withId(R.id.ingredients_item)).check(matches(withText("INGREDIENTS")));
     }
