@@ -89,7 +89,7 @@ public class InstructionsFragment extends Fragment {
 
         videoURL = currentInstruction.getVideoURL();
         playerView = rootView.findViewById(R.id.exoplayer);
-        if (videoURL != null) {
+        if (!videoURL.equals("")) {
             playerView.setVisibility(View.VISIBLE);
         } else {
             playerView.setVisibility(View.GONE);

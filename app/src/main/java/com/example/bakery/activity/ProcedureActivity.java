@@ -46,10 +46,16 @@ public class ProcedureActivity extends AppCompatActivity {
             InstructionsFragment instructionsFragment = new InstructionsFragment();
             instructionsFragment.setArguments(args);
 
-            fragmentManager.beginTransaction()
-                    .add(R.id.procedure_portrait_fragment, instructionsFragment)
-                    .commit();
-
+            if (savedInstanceState == null) {
+                fragmentManager.beginTransaction()
+                        .add(R.id.procedure_portrait_fragment, instructionsFragment)
+                        .commit();
+            } else {
+                fragmentManager.beginTransaction()
+                        .replace(R.id.procedure_portrait_fragment, instructionsFragment)
+                        .commit();
+            }
+            
         } else if (intent.hasExtra("ingredientJSON")) {
             String ingredientJSON = intent.getStringExtra("ingredientJSON");
 
